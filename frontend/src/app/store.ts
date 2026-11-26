@@ -15,10 +15,11 @@ import type {
   Snapshot,
   StatsEvent,
   UpdateInfo,
+  VPNStatus,
 } from "./api";
 
 export type Mode = "simple" | "full";
-export type Page = "overview" | "servers" | "dpi" | "proxy" | "rules" | "dnsserver" | "fakesni" | "tools" | "logs" | "settings";
+export type Page = "overview" | "servers" | "dpi" | "proxy" | "vpn" | "rules" | "dnsserver" | "fakesni" | "tools" | "logs" | "settings";
 export type ToolsTab = "logs" | "lookup" | "scanner" | "cfscan" | "stamp";
 export type ProxyTab = "proxy" | "fakesni";
 
@@ -67,6 +68,9 @@ type State = {
   setAdvScan: (p: AdvScanProgress) => void;
   cfScan: CFProgress | null;
   setCfScan: (p: CFProgress) => void;
+  /** Live OpenVPN state pushed as vpn:status; the page keeps its list. */
+  vpn: VPNStatus | null;
+  setVPN: (v: VPNStatus | null) => void;
   setDnsStats: (s: ServeStats) => void;
   setSetup: (s: SetupCountdown) => void;
   bumpCerts: () => void;
@@ -115,6 +119,7 @@ const initial = {
   proxyTab: "proxy" as ProxyTab,
   advScan: null as AdvScanProgress | null,
   cfScan: null as CFProgress | null,
+  vpn: null as VPNStatus | null,
 };
 
 const tail = <T,>(arr: T[], v: T, n: number) => {
@@ -161,6 +166,7 @@ export const useGhost = create<State>((set) => ({
   setProxyTab: (proxyTab) => set({ proxyTab }),
   setAdvScan: (advScan) => set({ advScan }),
   setCfScan: (cfScan) => set({ cfScan }),
+  setVPN: (vpn) => set({ vpn }),
   dismissBanner: (bannerDismissed) => set({ bannerDismissed }),
   setQueryLog: (queryLog) => set(queryLog ? { queryLog } : { queryLog, proxyConns: [] }),
   setProxyStats: (proxyStats) => set({ proxyStats }),

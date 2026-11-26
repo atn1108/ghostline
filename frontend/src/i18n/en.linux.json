@@ -18,6 +18,10 @@
       "message": "The DPI bypass engine could not be started",
       "action": "Check that /var/lib/ghostline/bin is not modified or mounted noexec, then try again"
     },
+    "VPN_BINARY_MISSING": {
+      "message": "OpenVPN was not found on this computer",
+      "action": "Install OpenVPN (sudo apt install openvpn), then press auto-detect"
+    },
     "SYSPROXY_FAILED": {
       "message": "could not set the desktop's system proxy"
     },
@@ -44,5 +48,8 @@
     "warning": {
       "p5": "The Ghostline root certificate installed on this system can sign only the domains in your rules and is removed when you disconnect."
     }
+  },
+  "vpn": {
+    "install": "Install the OpenVPN client, then press auto-detect: sudo apt install openvpn (Fedora: sudo dnf install openvpn)"
   }
 }

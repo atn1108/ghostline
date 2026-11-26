@@ -21,11 +21,12 @@ func TestDecodeEvent_CoversEveryRegisteredEvent(t *testing.T) {
 		"EventListsProgress": app.EventListsProgress, "EventDNSServerStats": app.EventDNSServerStats,
 		"EventCertsChanged": app.EventCertsChanged, "EventSetupCountdown": app.EventSetupCountdown,
 		"EventToolsScan": app.EventToolsScan, "EventToolsCFScan": app.EventToolsCFScan,
+		"EventVPNStatus": app.EventVPNStatus,
 	}
 	src, err := os.ReadFile("events.go")
 	require.NoError(t, err)
 	regs := regexp.MustCompile(`RegisterEvent\[(.+?)\]\(app\.(\w+)\)`).FindAllStringSubmatch(string(src), -1)
-	require.Len(t, regs, 16)
+	require.Len(t, regs, 17)
 	for _, r := range regs {
 		name, ok := names[r[2]]
 		require.True(t, ok, r[2])

@@ -29,6 +29,7 @@ import (
 	"github.com/hashcott/ghostline/internal/store"
 	"github.com/hashcott/ghostline/internal/sysdns"
 	"github.com/hashcott/ghostline/internal/upstreams"
+	"github.com/hashcott/ghostline/internal/vpn"
 	"github.com/hashcott/ghostline/internal/watchdog"
 )
 
@@ -76,6 +77,7 @@ type Core struct {
 	cat     *catalog
 	strats  *strategyBox
 	checker *updateChecker
+	vpn     *vpn.Manager
 }
 
 // New builds everything in the order the GUI always has: settings, state,
@@ -136,12 +138,20 @@ func New(o Options) (*Core, error) {
 	}
 
 	bus := app.NewBus(o.Emitter)
+	// OpenVPN profiles and the one client Ghostline may run. The page gets
+	// every state change as vpn:status.
+	vpnStore := vpn.NewStore(paths.DataDir)
+	vpnMgr := vpn.NewManager()
+	vpnMgr.SetNotify(func(st vpn.Status) {
+		bus.Emit(app.EventVPNStatus, app.VPNStatusEvent(st))
+	})
 	// Every full scan (connect, level change, scan all) shows live in the UI.
 	picker.Watch = func(done, total int, r *scanner.Result, running bool) {
 		bus.Emit(app.EventScan, app.ScanProgress{Done: done, Total: total, Result: r, Running: running})
 	}
 	eng := engine.New(bus.Query)
 	pw := newProxyWiring(box, eng, p, bus, log)
+	pw.vpn = vpnMgr
 	cw := newCertWiring(p)
 	dw := &dnsWiring{eng: eng, certs: cw}
 	var svc *app.Service // assigned below; ConfirmOverride runs only after startup
@@ -309,13 +319,19 @@ func New(o Options) (*Core, error) {
 		},
 		OpenFile: o.OpenFile,
 		SaveFile: o.SaveFile,
+		VPN:      vpnMgr,
+		VPNStore: vpnStore,
+		DNSActive: func() bool {
+			st := orch.Snapshot().Status
+			return st == app.StatusProtected || st == app.StatusDegraded || st == app.StatusConnecting
+		},
 	})
 	if recovered, err := app.LoadRules(svc); err != nil || recovered {
 		log.Warn("rules.json", "err", err, "recovered", recovered)
 		orch.AddWarning(app.AppError{Code: app.CodeRulesParse, Params: map[string]any{"line": 0}})
 	}
 	return &Core{Orch: orch, Svc: svc, Bus: bus, Settings: box,
-		p: p, paths: paths, log: log, eng: eng, pw: pw, cat: cat, strats: strats, checker: checker}, nil
+		p: p, paths: paths, log: log, eng: eng, pw: pw, cat: cat, strats: strats, checker: checker, vpn: vpnMgr}, nil
 }
 
 // Start watches the network and the system proxy (in place when Start
@@ -380,8 +396,14 @@ func (c *Core) Start(ctx context.Context) (wait func()) {
 	}
 }
 
-// Shutdown disconnects cleanly, putting the system back as it was.
-func (c *Core) Shutdown(ctx context.Context) error { return c.Orch.Disconnect(ctx) }
+// Shutdown disconnects cleanly, putting the system back as it was. An
+// OpenVPN tunnel goes first, so its routes are gone before DNS is restored.
+func (c *Core) Shutdown(ctx context.Context) error {
+	if c.vpn != nil {
+		c.vpn.Stop()
+	}
+	return c.Orch.Disconnect(ctx)
+}
 
 // restoreNow is "Restore DNS now" when there is no connection to undo: it
 // restores from state.json if a run left a snapshot, otherwise it undoes

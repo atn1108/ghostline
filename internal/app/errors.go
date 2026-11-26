@@ -109,6 +109,15 @@ const (
 	CodeImportExpired        = "IMPORT_EXPIRED"
 	CodeImportWriteFailed    = "IMPORT_WRITE_FAILED"
 	CodeExportWriteFailed    = "EXPORT_WRITE_FAILED"
+
+	// VPN (OpenVPN profiles).
+	CodeVPNUnsupported   = "VPN_UNSUPPORTED"
+	CodeVPNBinaryMissing = "VPN_BINARY_MISSING"
+	CodeVPNNeedsAuth     = "VPN_NEEDS_AUTH"
+	CodeVPNBadConfig     = "VPN_BAD_CONFIG"
+	CodeVPNUnsafe        = "VPN_UNSAFE"
+	CodeVPNExternal      = "VPN_EXTERNAL"
+	CodeVPNStartFailed   = "VPN_START_FAILED"
 )
 
 // AppError is a coded error the UI can translate.

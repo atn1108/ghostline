@@ -35,6 +35,7 @@ var eventDecoders = map[string]func(json.RawMessage) (any, error){
 	app.EventSetupCountdown: dec[app.SetupCountdown],
 	app.EventToolsScan:      dec[app.AdvScanProgress],
 	app.EventToolsCFScan:    dec[app.CFProgress],
+	app.EventVPNStatus:      dec[app.VPNStatus],
 }
 
 // decodeEvent decodes a daemon event for the frontend; false for names the

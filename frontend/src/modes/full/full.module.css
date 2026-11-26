@@ -216,6 +216,49 @@
   color: var(--amber);
 }
 
+/* VPN page: one row per imported profile, and the drop zone for a new one. */
+.vpnRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 255, 163, 0.08);
+  flex-wrap: wrap;
+}
+
+.vpnName {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.vpnMeta {
+  color: var(--dim);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+
+.vpnDrop {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  border: 1px dashed rgba(0, 208, 255, 0.35);
+  background: transparent;
+  padding: 10px;
+  text-align: center;
+  color: var(--dim);
+  font: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+}
+
+.vpnDrop:hover,
+.vpnDropActive {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
 /* Sidebar status card */
 .sideCard {
   display: grid;

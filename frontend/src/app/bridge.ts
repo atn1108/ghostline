@@ -31,6 +31,7 @@ export function startBridge(): () => void {
     Events.On("lists:progress", () => useGhost.getState().bumpRules()),
     Events.On("tools:scan", (ev: any) => useGhost.getState().setAdvScan(ev.data)),
     Events.On("tools:cfscan", (ev: any) => useGhost.getState().setCfScan(ev.data)),
+    Events.On("vpn:status", (ev: any) => useGhost.getState().setVPN(ev.data)),
   ];
   void Service.GetSnapshot().then((snap) => {
     applyPlatform(snap?.platform);

@@ -135,6 +135,13 @@ func init() {
 	application.RegisterBindingMethodID((*Service).TestUpstreamProxy, 1421704818)
 	application.RegisterBindingMethodID((*Service).UpdateList, 75098978)
 	application.RegisterBindingMethodID((*Service).UseOnlyServer, 2807799011)
+	application.RegisterBindingMethodID((*Service).VPNAdd, 1074893492)
+	application.RegisterBindingMethodID((*Service).VPNConnect, 537472057)
+	application.RegisterBindingMethodID((*Service).VPNDelete, 1576753546)
+	application.RegisterBindingMethodID((*Service).VPNDetectBinary, 3551255939)
+	application.RegisterBindingMethodID((*Service).VPNDisconnect, 2777082923)
+	application.RegisterBindingMethodID((*Service).VPNInfo, 1421842245)
+	application.RegisterBindingMethodID((*Service).VPNSetBinary, 3648974270)
 }
 
 func (s *Service) AcceptTerms() error {
@@ -692,4 +699,40 @@ func (s *Service) UpdateList(a0 lists.List) error {
 
 func (s *Service) UseOnlyServer(a0 string) error {
 	return s.call(context.Background(), "UseOnlyServer", nil, a0)
+}
+
+func (s *Service) VPNAdd(a0 string, a1 string) (app.VPNProfile, error) {
+	var r app.VPNProfile
+	err := s.call(context.Background(), "VPNAdd", &r, a0, a1)
+	return r, err
+}
+
+func (s *Service) VPNConnect(a0 string, a1 string, a2 string) error {
+	return s.call(context.Background(), "VPNConnect", nil, a0, a1, a2)
+}
+
+func (s *Service) VPNDelete(a0 string) error {
+	return s.call(context.Background(), "VPNDelete", nil, a0)
+}
+
+func (s *Service) VPNDetectBinary() string {
+	var r string
+	err := s.call(context.Background(), "VPNDetectBinary", &r)
+	s.logErr("VPNDetectBinary", err)
+	return r
+}
+
+func (s *Service) VPNDisconnect() {
+	s.logErr("VPNDisconnect", s.call(context.Background(), "VPNDisconnect", nil))
+}
+
+func (s *Service) VPNInfo() app.VPNInfo {
+	var r app.VPNInfo
+	err := s.call(context.Background(), "VPNInfo", &r)
+	s.logErr("VPNInfo", err)
+	return r
+}
+
+func (s *Service) VPNSetBinary(a0 string) error {
+	return s.call(context.Background(), "VPNSetBinary", nil, a0)
 }

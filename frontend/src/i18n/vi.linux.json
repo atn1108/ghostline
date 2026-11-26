@@ -18,6 +18,10 @@
       "message": "Không khởi động được engine vượt DPI",
       "action": "Kiểm tra /var/lib/ghostline/bin không bị sửa hoặc mount noexec, rồi thử lại"
     },
+    "VPN_BINARY_MISSING": {
+      "message": "Không tìm thấy OpenVPN trên máy này",
+      "action": "Cài OpenVPN (sudo apt install openvpn), rồi bấm tự dò"
+    },
     "SYSPROXY_FAILED": {
       "message": "không đặt được proxy hệ thống của desktop"
     },
@@ -44,5 +48,8 @@
     "warning": {
       "p5": "Chứng chỉ gốc Ghostline cài vào hệ thống chỉ ký được cho đúng các tên miền trong rule và bị gỡ khi ngắt kết nối."
     }
+  },
+  "vpn": {
+    "install": "Cài OpenVPN rồi bấm tự dò: sudo apt install openvpn (Fedora: sudo dnf install openvpn)"
   }
 }

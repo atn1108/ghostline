@@ -10,6 +10,7 @@ import { Overview } from "./pages/Overview";
 import { Servers } from "./pages/Servers";
 import { Dpi } from "./pages/Dpi";
 import { Proxy } from "./pages/Proxy";
+import { Vpn } from "./pages/Vpn";
 import { Rules } from "./pages/Rules";
 import { DnsServer } from "./pages/DnsServer";
 import { FakeSni } from "./pages/FakeSni";
@@ -22,7 +23,7 @@ import css from "./full.module.css";
 // Proxy and Tools.
 const groups: { header: string; pages: Page[] }[] = [
   { header: "basic", pages: ["overview", "servers", "dpi"] },
-  { header: "advanced", pages: ["proxy", "rules", "dnsserver"] },
+  { header: "advanced", pages: ["proxy", "vpn", "rules", "dnsserver"] },
   { header: "diagnose", pages: ["tools"] },
   { header: "", pages: ["settings"] },
 ];
@@ -93,6 +94,7 @@ export function FullView() {
         {page === "servers" && <Servers />}
         {page === "dpi" && <Dpi />}
         {page === "proxy" && <ProxyPage />}
+        {page === "vpn" && <Vpn />}
         {page === "rules" && <Rules />}
         {page === "dnsserver" && <DnsServer />}
         {page === "tools" && <Tools />}

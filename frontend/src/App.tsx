@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Window } from "@wailsio/runtime";
 import { startBridge } from "./app/bridge";
 import { useGhost, type Mode } from "./app/store";
 import { Service } from "./app/api";
@@ -21,6 +22,16 @@ function App() {
   const [terms, setTerms] = useState<"unknown" | "pending" | "accepted">("unknown");
   const ready = settings != null;
   useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "F11") {
+        e.preventDefault();
+        void Window.ToggleFullscreen?.();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+  useEffect(() => {
     if (!ready) return;
     void Service.TermsAccepted().then(
       (ok) => setTerms(ok ? "accepted" : "pending"),
@@ -31,9 +42,9 @@ function App() {
   const mode: Mode = settings?.mode === "full" ? "full" : "simple";
   const lang: Lang = (i18n.language as Lang) === "en" ? "en" : "vi";
 
-  const onMode = (m: Mode) => {
+  const onMode = async (m: Mode) => {
     if (settings) setSettings({ ...settings, mode: m });
-    void Service.SetMode(m);
+    await Service.SetMode(m);
   };
   const onLang = async (l: Lang) => {
     await initI18n(l);

@@ -30,6 +30,7 @@ import (
 	"github.com/hashcott/ghostline/internal/servers"
 	"github.com/hashcott/ghostline/internal/store"
 	"github.com/hashcott/ghostline/internal/sysdns"
+	"github.com/hashcott/ghostline/internal/vpn"
 )
 
 // SettingsBox holds the live settings and persists every change.
@@ -161,6 +162,12 @@ type ServiceDeps struct {
 	// opens a path the user picked with its own privileges.
 	OpenFile     func(ctx context.Context, title string) (name string, data []byte, err error)
 	ISPResolvers func() []string // this PC's DNS before Ghostline took over
+
+	// VPN runs OpenVPN on the profiles the page imported; nil where the
+	// platform wires no OpenVPN support.
+	VPN       *vpn.Manager
+	VPNStore  *vpn.Store
+	DNSActive func() bool // true when Ghostline's own encrypted DNS is holding system DNS
 }
 
 // Service is bound to the frontend by Wails; its exported methods are the

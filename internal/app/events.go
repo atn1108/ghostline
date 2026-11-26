@@ -31,6 +31,9 @@ const (
 	// Phase 3 tools.
 	EventToolsScan   = "tools:scan"
 	EventToolsCFScan = "tools:cfscan"
+
+	// EventVPNStatus carries the OpenVPN client's state and log.
+	EventVPNStatus = "vpn:status"
 )
 
 // SetupCountdown is the phone setup page's remaining time (0: closed).

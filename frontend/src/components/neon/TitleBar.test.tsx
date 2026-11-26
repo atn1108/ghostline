@@ -1,9 +1,25 @@
-import { beforeAll, expect, test, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { beforeAll, beforeEach, expect, test, vi } from "vitest";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { TitleBar } from "./TitleBar";
 import { initI18n } from "../../i18n";
 
+const win = vi.hoisted(() => ({
+  Minimise: vi.fn(),
+  Maximise: vi.fn(() => Promise.resolve()),
+  ToggleMaximise: vi.fn(() => Promise.resolve()),
+  IsMaximised: vi.fn(() => Promise.resolve(false)),
+  Close: vi.fn(),
+}));
+vi.mock("@wailsio/runtime", () => ({
+  Window: win,
+  Events: { On: vi.fn(() => () => {}) },
+}));
+
 beforeAll(() => initI18n("vi"));
+beforeEach(() => {
+  vi.clearAllMocks();
+  win.IsMaximised.mockResolvedValue(false);
+});
 
 test("language toggle calls onLang with the other language", () => {
   const onLang = vi.fn();
@@ -29,4 +45,17 @@ test("drag region and no-drag buttons", () => {
   for (const b of Array.from(bar.querySelectorAll("button"))) {
     expect((b as HTMLElement).style.getPropertyValue("--wails-draggable")).toBe("no-drag");
   }
+});
+
+test("maximise button switches from simple to full and maximises, or toggles in full mode", async () => {
+  const onMode = vi.fn(() => Promise.resolve());
+  const { rerender } = render(<TitleBar mode="simple" onMode={onMode} lang="vi" onLang={() => {}} />);
+  fireEvent.click(screen.getByRole("button", { name: "phóng to" }));
+  await waitFor(() => expect(onMode).toHaveBeenCalledWith("full"));
+  expect(win.Maximise).toHaveBeenCalled();
+
+  rerender(<TitleBar mode="full" onMode={onMode} lang="vi" onLang={() => {}} />);
+  win.IsMaximised.mockResolvedValueOnce(true);
+  fireEvent.click(screen.getByRole("button", { name: "khôi phục" }));
+  await waitFor(() => expect(win.ToggleMaximise).toHaveBeenCalled());
 });

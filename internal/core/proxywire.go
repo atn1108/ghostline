@@ -26,6 +26,7 @@ import (
 	"github.com/hashcott/ghostline/internal/secrets"
 	"github.com/hashcott/ghostline/internal/store"
 	"github.com/hashcott/ghostline/internal/tlsfrag"
+	"github.com/hashcott/ghostline/internal/vpn"
 	builtinLists "github.com/hashcott/ghostline/lists"
 )
 
@@ -41,6 +42,7 @@ type proxyWiring struct {
 	bus    *app.Bus
 	holder *rules.Holder
 	frag   *store.FragCache
+	vpn    *vpn.Manager
 	log    *slog.Logger
 	// mitm is the Fake SNI certificate source (phase S sets it).
 	mitm mitmBox
@@ -119,10 +121,38 @@ func (w *proxyWiring) selfAddrs() []netip.Addr {
 	return w.self
 }
 
+// vpnResolver drops IPv6 results while an IPv4-only OpenVPN tunnel is up so
+// the proxy cannot leak connections over the ISP's native IPv6 interface.
+type vpnResolver struct {
+	base         dialer.Resolver
+	blockingIPv6 func() bool
+}
+
+func (r vpnResolver) Resolve(ctx context.Context, host string) ([]netip.Addr, error) {
+	addrs, err := r.base.Resolve(ctx, host)
+	if err != nil || r.blockingIPv6 == nil || !r.blockingIPv6() {
+		return addrs, err
+	}
+	v4 := make([]netip.Addr, 0, len(addrs))
+	for _, a := range addrs {
+		if a.Is4() {
+			v4 = append(v4, a)
+		}
+	}
+	if len(v4) == 0 {
+		return nil, fmt.Errorf("vpn: no IPv4 address for %s (IPv6 blocked to prevent leak)", host)
+	}
+	return v4, nil
+}
+
 func (w *proxyWiring) newDialer(port int, matcher func() dialer.Matcher) *dialer.Dialer {
 	lo4, lo6 := netip.MustParseAddr("127.0.0.1"), netip.IPv6Loopback()
+	var blocking func() bool
+	if w.vpn != nil {
+		blocking = w.vpn.BlockingIPv6
+	}
 	return dialer.New(dialer.Config{
-		Resolver:  w.eng,
+		Resolver:  vpnResolver{base: w.eng, blockingIPv6: blocking},
 		Matcher:   matcher,
 		Cache:     fragCache{w},
 		Frag:      w.fragConfig,
