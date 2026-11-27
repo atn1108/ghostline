@@ -31,6 +31,8 @@
   },
   "title": {
     "minimise": "minimise",
+    "maximise": "maximise",
+    "restore": "restore",
     "close": "close",
     "language": "language"
   },
@@ -116,6 +118,7 @@
     "logs": "logs",
     "settings": "settings",
     "proxy": "proxy",
+    "vpn": "vpn",
     "rules": "rules",
     "dnsserver": "dns server",
     "fakesni": "fake sni",
@@ -702,6 +705,29 @@
     "SERVICE_ACTION_UNSUPPORTED": {
       "message": "This build cannot install the service itself",
       "action": "Reinstall Ghostline from your system's package"
+    },
+    "VPN_UNSUPPORTED": {
+      "message": "OpenVPN is not available here"
+    },
+    "VPN_BINARY_MISSING": {
+      "message": "OpenVPN was not found on this computer",
+      "action": "Install the OpenVPN community client, then press auto-detect"
+    },
+    "VPN_NEEDS_AUTH": {
+      "message": "This server asks for a username and password"
+    },
+    "VPN_BAD_CONFIG": {
+      "message": "This is not a usable OpenVPN profile"
+    },
+    "VPN_UNSAFE": {
+      "message": "This profile runs commands, so Ghostline refuses to use it"
+    },
+    "VPN_EXTERNAL": {
+      "message": "This profile points at files it does not contain",
+      "action": "Export it again with the certificates embedded in the file"
+    },
+    "VPN_START_FAILED": {
+      "message": "OpenVPN could not start"
     }
   },
   "tray": {
@@ -779,6 +805,39 @@
     },
     "systemProxyDesktop": "Sets the proxy in {{desktop}}'s settings",
     "systemProxyManual": "Ghostline cannot change {{desktop}}'s proxy settings: set an HTTP proxy to {{addr}} by hand"
+  },
+  "vpn": {
+    "title": "VPN (OPENVPN)",
+    "engine": "openvpn",
+    "engineMissing": "OpenVPN was not found on this computer",
+    "install": "Install the OpenVPN community client, then press auto-detect: Windows: winget install --id OpenVPNTechnologies.OpenVPN — Linux: sudo apt install openvpn",
+    "path": "path to openvpn",
+    "auto": "auto-detect",
+    "profiles": "PROFILES",
+    "empty": "no profiles yet — import an .ovpn file",
+    "import": "import .ovpn",
+    "dropHint": "or drop a file anywhere on this page",
+    "dropZone": "drop an .ovpn file here",
+    "connect": "connect",
+    "disconnect": "disconnect",
+    "delete": "delete",
+    "deleteConfirm": "really delete?",
+    "authUser": "username",
+    "authPass": "password",
+    "needsAuth": "asks for a username and password",
+    "remotes": "{{n}} servers",
+    "connected": "connected",
+    "tunnel": "TUNNEL",
+    "profile": "profile",
+    "error": "error",
+    "since": "since {{time}}",
+    "hint": "the tunnel runs beside Ghostline's DNS: names keep going through Ghostline, everything else through the VPN",
+    "phase": {
+      "idle": "not connected",
+      "starting": "connecting…",
+      "connected": "connected",
+      "error": "error"
+    }
   },
   "rules": {
     "title": "RULES",

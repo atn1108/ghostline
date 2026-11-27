@@ -93,11 +93,13 @@ func (u *ui) createWindow() {
 		MaximiseButtonState: application.ButtonDisabled,
 		BackgroundColour:    application.NewRGB(5, 7, 10),
 		URL:                 "/",
+		EnableFileDrop:      true,
 	}
 	if s.Mode == store.ModeFull {
 		opts.Width, opts.Height = max(s.FullWindow.Width, minFullW), max(s.FullWindow.Height, minFullH)
 		opts.MinWidth, opts.MinHeight = minFullW, minFullH
 		opts.DisableResize = false
+		opts.MaximiseButtonState = application.ButtonEnabled
 	}
 	w := u.app.Window.NewWithOptions(opts)
 	u.win = w
@@ -162,7 +164,16 @@ func (u *ui) resize(mode string) {
 		w, h = max(s.FullWindow.Width, minFullW), max(s.FullWindow.Height, minFullH)
 		u.win.SetResizable(true)
 		u.win.SetMinSize(minFullW, minFullH)
+		if u.win.IsMaximised() || u.win.IsFullscreen() {
+			return
+		}
 	} else {
+		if u.win.IsFullscreen() {
+			u.win.UnFullscreen()
+		}
+		if u.win.IsMaximised() {
+			u.win.UnMaximise()
+		}
 		if w0 >= minFullW { // remember the full-interface size
 			u.saveFullWindow(w0, h0)
 		}

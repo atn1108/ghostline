@@ -27,4 +27,5 @@ func init() {
 	application.RegisterEvent[app.SetupCountdown](app.EventSetupCountdown)
 	application.RegisterEvent[app.AdvScanProgress](app.EventToolsScan)
 	application.RegisterEvent[app.CFProgress](app.EventToolsCFScan)
+	application.RegisterEvent[app.VPNStatus](app.EventVPNStatus)
 }

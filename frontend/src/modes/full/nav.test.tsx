@@ -10,6 +10,7 @@ vi.mock("./pages/Overview", () => ({ Overview: stub("OVERVIEW") }));
 vi.mock("./pages/Servers", () => ({ Servers: stub("SERVERS") }));
 vi.mock("./pages/Dpi", () => ({ Dpi: stub("DPI") }));
 vi.mock("./pages/Proxy", () => ({ Proxy: stub("PROXY") }));
+vi.mock("./pages/Vpn", () => ({ Vpn: stub("VPN") }));
 vi.mock("./pages/Rules", () => ({ Rules: stub("RULES") }));
 vi.mock("./pages/DnsServer", () => ({ DnsServer: stub("DNSSERVER") }));
 vi.mock("./pages/FakeSni", () => ({ FakeSni: stub("FAKESNI") }));
@@ -28,11 +29,11 @@ beforeEach(() => {
   useGhost.getState().setSnapshot({ status: "disconnected", warnings: [], servers: [], blockedSites: [], reasons: [], dpi: { enabled: false } } as any);
 });
 
-test("the sidebar has 8 pages in three groups; fake sni and logs are tabs", () => {
+test("the sidebar has 9 pages in three groups; fake sni and logs are tabs", () => {
   render(<FullView />);
   const nav = screen.getByRole("navigation");
   const pages = within(nav).getAllByRole("button").map((b) => b.textContent).filter((t) => t && !/kết nối/i.test(t));
-  expect(pages).toEqual(["tổng quan", "máy chủ", "vượt dpi", "proxy", "rules", "dns server", "công cụ", "cài đặt"]);
+  expect(pages).toEqual(["tổng quan", "máy chủ", "vượt dpi", "proxy", "vpn", "rules", "dns server", "công cụ", "cài đặt"]);
   for (const h of ["cơ bản", "nâng cao", "chẩn đoán"]) expect(within(nav).getByText(h)).toBeInTheDocument();
   expect(within(nav).getByRole("separator"), "settings is set apart").toBeInTheDocument();
 });

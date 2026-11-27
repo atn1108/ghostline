@@ -31,6 +31,8 @@
   },
   "title": {
     "minimise": "thu nhỏ",
+    "maximise": "phóng to",
+    "restore": "khôi phục",
     "close": "đóng",
     "language": "ngôn ngữ"
   },
@@ -116,6 +118,7 @@
     "logs": "nhật ký",
     "settings": "cài đặt",
     "proxy": "proxy",
+    "vpn": "vpn",
     "rules": "rules",
     "dnsserver": "dns server",
     "fakesni": "fake sni",
@@ -702,6 +705,29 @@
     "SERVICE_ACTION_UNSUPPORTED": {
       "message": "Bản này không tự cài được dịch vụ",
       "action": "Cài lại Ghostline từ gói của hệ điều hành"
+    },
+    "VPN_UNSUPPORTED": {
+      "message": "OpenVPN chưa được hỗ trợ ở đây"
+    },
+    "VPN_BINARY_MISSING": {
+      "message": "Không tìm thấy OpenVPN trên máy này",
+      "action": "Cài OpenVPN community rồi bấm tự dò"
+    },
+    "VPN_NEEDS_AUTH": {
+      "message": "Máy chủ này cần tên người dùng và mật khẩu"
+    },
+    "VPN_BAD_CONFIG": {
+      "message": "Đây không phải file OpenVPN dùng được"
+    },
+    "VPN_UNSAFE": {
+      "message": "File này có lệnh chạy chương trình nên Ghostline từ chối"
+    },
+    "VPN_EXTERNAL": {
+      "message": "File này trỏ tới file khác mà nó không chứa",
+      "action": "Xuất lại file kèm chứng chỉ bên trong"
+    },
+    "VPN_START_FAILED": {
+      "message": "OpenVPN không khởi động được"
     }
   },
   "tray": {
@@ -779,6 +805,39 @@
     },
     "systemProxyDesktop": "Đặt proxy trong phần cài đặt của {{desktop}}",
     "systemProxyManual": "Ghostline không đổi được cài đặt proxy của {{desktop}}: hãy tự đặt proxy HTTP về {{addr}}"
+  },
+  "vpn": {
+    "title": "VPN (OPENVPN)",
+    "engine": "openvpn",
+    "engineMissing": "không tìm thấy OpenVPN trên máy này",
+    "install": "Cài OpenVPN community rồi bấm tự dò: Windows: winget install --id OpenVPNTechnologies.OpenVPN — Linux: sudo apt install openvpn",
+    "path": "đường dẫn openvpn",
+    "auto": "tự dò",
+    "profiles": "HỒ SƠ",
+    "empty": "chưa có hồ sơ nào — hãy nhập một file .ovpn",
+    "import": "nhập .ovpn",
+    "dropHint": "hoặc kéo-thả file vào trang này",
+    "dropZone": "thả file .ovpn vào đây",
+    "connect": "kết nối",
+    "disconnect": "ngắt",
+    "delete": "xóa",
+    "deleteConfirm": "chắc chắn xóa?",
+    "authUser": "tên người dùng",
+    "authPass": "mật khẩu",
+    "needsAuth": "cần tên người dùng và mật khẩu",
+    "remotes": "{{n}} máy chủ",
+    "connected": "đang kết nối",
+    "tunnel": "TUNNEL",
+    "profile": "hồ sơ",
+    "error": "lỗi",
+    "since": "từ {{time}}",
+    "hint": "tunnel chạy cùng DNS của Ghostline: tên miền vẫn đi qua Ghostline, phần còn lại đi qua VPN",
+    "phase": {
+      "idle": "chưa kết nối",
+      "starting": "đang kết nối…",
+      "connected": "đã kết nối",
+      "error": "lỗi"
+    }
   },
   "rules": {
     "title": "RULES",

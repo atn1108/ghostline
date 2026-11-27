@@ -31,6 +31,9 @@ export type {
   CFProgress,
   ImportPreview,
   DPIInfo,
+  VPNInfo,
+  VPNProfile,
+  VPNStatus,
 } from "../../bindings/github.com/hashcott/ghostline/internal/app/models";
 export type { Answer, Source as LookupSource, Verdict } from "../../bindings/github.com/hashcott/ghostline/internal/lookup/models";
 export type { Fields as StampFields } from "../../bindings/github.com/hashcott/ghostline/internal/stamps/models";
